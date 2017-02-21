@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 可以扫描controller、service、...这里让扫描controller，指定controller的包 -->
+    <context:component-scan base-package="com.xinlee.demo.controller"/>
+
+    <!-- 校验器注入到处理器适配器中 -->
+    <mvc:annotation-driven/>
+
+    <!-- Velocity自身配置 -->
+    <bean class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <!-- 模板存放根目录 -->
+        <property name="resourceLoaderPath" value="/WEB-INF/view"/>
+        <property name="velocityProperties">
+            <props>
+                <!-- 输入编码 -->
+                <prop key="input.encoding">UTF-8</prop>
+                <!-- 输出编码 -->
+                <prop key="output.encoding">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+    <!-- Velocity视图解析器的配置-->
+    <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <!-- 后缀 -->
+        <property name="suffix" value=".vm" />
+        <!-- 解析内容以及编码 -->
+        <property name="contentType" value="text/html;charset=utf-8" />
+        <!-- 获取项目根目录，在vm中$.rc获取 -->
+        <property name="requestContextAttribute" value="rc"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <!-- 设置是否所有的session属性在与模板进行合并之前添加到model中 -->
+        <property name="exposeSessionAttributes" value="true"/>
+    </bean>
+
+    <!-- 在处理器映射器上配置拦截器：一般不推荐使用 -->
+    <!--    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+            <property name="interceptors">
+                <list>
+                    <ref bean="handlerInterceptor1"/>
+                    <ref bean="handlerInterceptor2"/>
+                </list>
+            </property>
+        </bean>
+        <bean id="handlerInterceptor1" class="com.xinlee.demo.interceptor.HandlerInterceptor1"/>
+        <bean id="handlerInterceptor2" class="com.xinlee.demo.interceptor.HandlerInterceptor2"/>-->
+
+    <!-- 拦截器：推荐使用这种 -->
+<!--    <mvc:interceptors>
+        &lt;!&ndash; 多个拦截器，顺序执行 &ndash;&gt;
+        <mvc:interceptor>
+            &lt;!&ndash; /**表示所有url包括子url路径 &ndash;&gt;
+            <mvc:mapping path="/**"/>
+            <bean class="com.xinlee.demo.interceptor.HandlerInterceptor1"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.xinlee.demo.interceptor.HandlerInterceptor2"/>
+        </mvc:interceptor>
+    </mvc:interceptors>-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.xinlee.demo.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+</beans>

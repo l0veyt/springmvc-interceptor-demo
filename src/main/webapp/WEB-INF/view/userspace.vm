@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>登录后才能访问的页面</title>
+</head>
+<body>
+    <h1>登录后才能访问的页面</h1>
+    <p>$rc.contextPath</p>
+    <p>当前登录用户：$session.getAttribute("username")</p>
+</body>
+</html>
